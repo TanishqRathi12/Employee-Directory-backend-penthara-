@@ -17,15 +17,10 @@ app.get("/health", (req, res) => {  // Health check endpoint
 });
 app.use("/employees", employeeRoutes); // Use the employee routes for all requests starting with /employees
 
-mongoose.connect(process.env.DATABASE_URL)  // Connect to MongoDB using the connection string from environment variables
-    .then(() => {
-        console.log("Connected to MongoDB");
-        app.listen(PORT,"0.0.0.0", () => {
-            console.log(`Server is running on port ${PORT}`);
-        });
-    })
-    .catch((error) => {
-        console.error("Error connecting to MongoDB:", error);
-    });
+console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
+
+mongoose.connect(process.env.DATABASE_URL) // Connect to MongoDB using the connection string from environment variables
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("Error connecting to MongoDB:", err));
 
 
