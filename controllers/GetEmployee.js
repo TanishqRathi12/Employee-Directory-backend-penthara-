@@ -1,25 +1,28 @@
 import Employee from "../models/EmployeeModel.js";
 import sendResponse from "../utils/Response.js";
 
-// Controller to fetch a single employee
-const getEmployee = async (req, res) => {
+// Controller to fetch employees with pagination
+const getEmployees = async (req, res) => {
   try {
-    const employees = await Employee.find().limit(6).select("id name email department role");
-    sendResponse(res, 200, "Employees fetched successfully", employees);
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 6;
+    const skip = (page - 1) * limit;
+
+    const employees = await Employee.find()
+      .skip(skip)
+      .limit(limit)
+      .select("id name email department role");
+
+    sendResponse(res, 200, "Employees fetched successfully", {
+      employees,
+      pagination: {
+        page,
+        limit,
+      },
+    });
   } catch (err) {
     sendResponse(res, 500, "Failed to fetch employees", null);
   }
 };
 
-// Controller to fetch all employees
-const getAllEmployees = async (req, res) => {
-    try {
-        const employees = await Employee.find().select(" id name email department role");
-        sendResponse(res, 200, "All employees fetched successfully", employees);
-    }
-    catch (err) {
-        sendResponse(res, 500, "Failed to fetch employees", null);
-    }
-}
-
-export { getEmployee, getAllEmployees };
+export default getEmployees;

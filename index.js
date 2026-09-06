@@ -15,7 +15,7 @@ app.use(express.json());
 app.get("/health", (req, res) => {  // Health check endpoint
     res.send("Server is healthy");
 });
-app.use("/employees", employeeRoutes); // Use the employee routes for all requests starting with /employees
+app.use("/api/employees", employeeRoutes); // Use the employee routes for all requests starting with /employees
 
 mongoose.connect(process.env.DATABASE_URL)  // Connect to MongoDB using the connection string from environment variables
     .then(() => {
